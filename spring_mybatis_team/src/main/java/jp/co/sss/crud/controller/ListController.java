@@ -1,11 +1,14 @@
 package jp.co.sss.crud.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import jp.co.sss.crud.entity.Employee;
 import jp.co.sss.crud.service.SearchAllEmployeesService;
 import jp.co.sss.crud.service.SearchForEmployeesByDepartmentService;
 import jp.co.sss.crud.service.SearchForEmployeesByEmpNameService;
@@ -54,8 +57,15 @@ public class ListController {
 	 */
 	@RequestMapping(path = "/list/empName", method = RequestMethod.GET)
 	public String findByEmpName(String empName, Model model) {
+		// 検索実行
+		List<Employee> employees = searchForEmployeesByEmpNameService.execute(empName);
+
 		//検索した社員情報をmodelに追加
 		model.addAttribute("employees", searchForEmployeesByEmpNameService.execute(empName));
+
+		if (employees.isEmpty()) {
+			model.addAttribute("message", "該当する社員情報がありません。");
+		}
 		return "list/list";
 	}
 

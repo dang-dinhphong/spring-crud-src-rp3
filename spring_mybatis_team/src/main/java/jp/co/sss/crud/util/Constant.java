@@ -10,9 +10,6 @@ public class Constant {
 	/** 部署IDの初期値 */
 	public static final Integer DEFAULT_DEPT_ID = 1;
 
-	/**
-	 * ログインエラー時のメッセージ
-	 */
+	// ログイン情報が間違っているメッセージ
 	public static final String LOGIN_ERR_MSG = "社員ID、またはパスワードが間違っています。";
-
 }

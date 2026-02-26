@@ -9,7 +9,7 @@
 	<h3>社員一覧画面</h3>
 	<!--TODO セッション中ユーザの権限が管理者の場合のみ表示するようにth:if属性を変更する(以下の文も同様) -->
 	<th:block th:if="${true}">
-		<div class="regist_link">
+		<div class="regist_link" th:if="${session.user != null && session.user.authority == 2}">
 			<a th:href="@{/regist/input}">新規社員登録</a>
 		</div>
 	</th:block>
@@ -26,42 +26,38 @@
 			<th class="empId">社員ID</th>
 			<th class="empName">社員名</th>
 			<th:block th:if="${true}">
-				<th class="gender">性別</th>
-				<th class="address">住所</th>
-				<th class="birthday">生年月日</th>
-				<th class="authority">権限</th>
+				<th class="gender" th:if="${session.user.authority == 2}">性別</th>
+				<th class="address" th:if="${session.user.authority == 2}">住所</th>
+				<th class="birthday" th:if="${session.user.authority == 2}">生年月日</th>
+				<th class="authority" th:if="${session.user.authority == 2}">権限</th>
 			</th:block>
 			<th class="deptName">部署名</th>
-			<th:block th:if="${true}">
-				<th class="button" colspan="2">操作</th>
-			</th:block>
+			<th class="button" colspan="2" >操作</th>
 		</tr>
 		<tr th:each="employee: ${employees}">
 			<td th:text="${employee.empId}"></td>
 			<td th:text="${employee.empName}"></td>
-			<th:block th:if="${true}">
-				<td th:switch="${employee.gender}"><span th:case="1">男性</span>
+			<th:block th:if="${session.user.authority == 2}">
+				<td th:switch="${employee.gender}" th:if="${session.user.authority == 2}"><span th:case="1">男性</span>
 					<span th:case="2">女性</span></td>
-				<td th:text="${employee.address}"></td>
-				<td th:text="${#dates.format(employee.birthday, 'yyyy/MM/dd')}"></td>
-				<td th:switch="${employee.authority}"><span th:case="1">一般</span>
+				<td th:text="${employee.address}" th:if="${session.user.authority == 2}"></td>
+				<td th:text="${#dates.format(employee.birthday, 'yyyy/MM/dd')}" th:if="${session.user.authority == 2}"></td>
+				<td th:switch="${employee.authority}" th:if="${session.user.authority == 2}"><span th:case="1">一般</span>
 					<span th:case="2">管理者</span></td>
 			</th:block>
 			<td th:text="${employee.deptName}"></td>
-			<th:block th:if="${true}">
 				<td>
-					<form method="get" th:action="@{/update/input}">
+					<form method="get" th:action="@{/update/input}" th:if="${session.user.authority == 2 or employee.empId == session.user.empId}">
 						<input type="hidden" name="empId" th:value="${employee.empId}" />
 						<input type="submit" value="変更" />
 					</form>
 				</td>
-				<td>
-					<form method="get" th:action="@{/delete/check}">
+				<td th:if="${session.user.authority == 2}">
+					<form method="get" th:action="@{/delete/check}" >
 						<input type="hidden" name="empId" th:value="${employee.empId}" />
 						<input type="submit" value="削除" class="delete" />
 					</form>
 				</td>
-			</th:block>
 		</tr>
 	</table>
 </body>

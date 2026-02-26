@@ -8,6 +8,18 @@
 </head>
 <body>
 	<th:block th:fragment="layout-main">
+		<script>
+			(function() {
+			  const params = new URLSearchParams(window.location.search);
+			  if (params.get('showAlert') === 'true') {
+			  // アラートメッセージ表示
+			 	alert('管理権限がありません。管理者として再度ログインしてください。');
+			  // アラートの「OK」ボタン押下後、不要なパスを削除
+				const cleanUrl = window.location.origin + window.location.pathname;
+				window.history.replaceState({}, document.title, cleanUrl);
+				}
+			 })();
+		</script>
 	<div th:object="${loginForm}">
 		<h3>ログイン画面</h3>
 		<!-- エラーメッセージの出力(入力チェック) -->

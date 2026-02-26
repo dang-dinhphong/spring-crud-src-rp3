@@ -9,10 +9,10 @@
 	<th:block id="header" th:fragment="layout-header">
 		<div class="content">
 			<div class="title">社員管理システム</div>
-			<div th:if="${session.user != null}" class="user_info">
-				ようこそ、<a th:href="@{/update/input(empId=${session.user.empId})}"><span th:text="${session.user.empName}"></span></a>さん
-				<span class="pipeline">|</span>
-				<a th:href="@{/logout}">ログアウト</a>
+			<div th:if="${session.user != null}" class="user_info">				
+				<a th:href="@{/update/input(empId=${session.user.empId})}"
+				th:text="'ようこそ、' + ${session.user.empName} + 'さん'" title="プロフィールを変更"></a>
+				<span class="pipeline"> | </span><a th:href="@{/logout}">ログアウト</a>
 			</div>
 		</div>
 	</th:block>

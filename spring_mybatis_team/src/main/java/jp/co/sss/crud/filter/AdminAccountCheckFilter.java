@@ -7,6 +7,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
+import jp.co.sss.crud.entity.Employee;
 
 /**
  * 権限認証用フィルタ
@@ -15,6 +18,12 @@ import jakarta.servlet.http.HttpServletResponse;
  */
 public class AdminAccountCheckFilter extends HttpFilter {
 
+	/**
+	 * ユーザ権限フィルタメソッド
+	 * 
+	 * @return アクセスを通過する。拒否される場合はログイン画面にリダイレクト
+	 * 
+	 */
 	@Override
 	public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
@@ -23,53 +32,63 @@ public class AdminAccountCheckFilter extends HttpFilter {
 		String requestURI = request.getRequestURI();
 		String requestMethod = request.getMethod();
 
+		// セッションからユーザー情報を取得
+		HttpSession session = request.getSession();
+		Employee loginUser = (Employee) session.getAttribute("user");
+
 		// 完了画面はフィルターを通過させる
 		if (requestURI.contains("/complete") && requestMethod.equals("GET")) {
 			chain.doFilter(request, response);
 			return;
 		}
 
-		//TODO セッションからユーザー情報を取得
-
-		//TODO セッションユーザーのIDと権限の変数をそれぞれ初期化
-
-		//TODO セッションユーザーがNULLでない場合
-		if (false) {
-			//TODO セッションユーザーからID、権限を取得して変数に代入
-
+		// NullPointerExceptionを防ぐ
+		if (loginUser == null) {
+			response.sendRedirect(request.getContextPath() + "/");
+			return;
 		}
 
-		//TODO  更新対象の社員IDをリクエストから取得
-
-		//TODO  社員IDがNULLでない場合
-		if (false) {
-			//TODO 社員IDを整数型に変換
-		}
-
-		//フィルター通過のフラグを初期化 true:フィルター通過 false:ログイン画面へ戻す
-		boolean accessFlg = false;
-
-		//TODO  管理者(セッションユーザーのIDが2)の場合、アクセス許可
-		if (false) {
-			accessFlg = true;
-			//TODO  ログインユーザ自身(セッションユーザのIDと変更リクエストの社員IDが一致)の画面はアクセス許可
-		} else if (false) {
-			accessFlg = true;
-		}
-
-		//TODO  accessFlgが立っていない場合はログイン画面へリダイレクトし、処理を終了する
-		if (false) {
-			//TODO  レスポンス情報を取得
-
-			//TODO  ログイン画面へリダイレクト
-
-			//処理を終了
+		// isAuthorizedメソッドはfalseになった場合、セッションを終了し、ログイン画面にリダイレクト + 警告を出す
+		if (!isAuthorized(request, loginUser)) {
+			session.invalidate();
+			response.sendRedirect(request.getContextPath() + "?showAlert=true");
 			return;
 		}
 
 		chain.doFilter(request, response);
-		return;
+	}
 
+	/**
+	 * ユーザ権限を判定
+	 * 
+	 * @param request リクエスト
+	 * @param user （ログイン中の）ユーザ
+	 * @return 管理者はすべての機能にアクセス許可
+	 * 一般権限は限られた機能のみ許可
+	 */
+	private boolean isAuthorized(HttpServletRequest request, Employee user) {
+		Integer authority = user.getAuthority();
+		String URI = request.getRequestURI();
+
+		// 管理者権限をすべて許可
+		if (authority == 2)
+			return true;
+
+		// 管理者以外は社員新規登録・削除をブロック
+		if (URI.contains("/regist") || URI.contains("/delete")) {
+			return false;
+		}
+
+		// セッションID = ユーザIDの場合のみ更新
+		if (URI.contains("/update")) {
+			String targetId = request.getParameter("empId");
+
+			if (targetId == null || !String.valueOf(user.getEmpId()).equals(targetId)) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 }
