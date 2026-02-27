@@ -44,6 +44,7 @@
 			</th:block>
 			<th:block th:if="${session.user.authority == 1}">
 			  <span th:text="*{gender == 1 ? '男性' : '女性'}"></span>
+			  <input type="hidden" th:field="*{gender}"/>
 			</th:block>
           </div>
         </div>
@@ -56,6 +57,7 @@
 			</th:block>
 			<th:block th:if="${session.user.authority == 1}">
 				<span th:text="*{address}"></span>
+				<input type="hidden" th:field="*{address}" />
 			</th:block>
           </div>
         </div>
@@ -68,6 +70,7 @@
 			</th:block>
 			<th:block th:if="${session.user.authority == 1}">
 				<span th:text="${#dates.format(employeeForm.birthday, 'yyyy/MM/dd')}"></span>
+				<input type="hidden" th:field="*{birthday}" />
 			</th:block>
           </div>
         </div>
@@ -104,6 +107,7 @@
 				  <span th:case="2">経理部</span>
 				  <span th:case="3">総務部</span>
 				</span>
+				<input type="hidden" th:field="*{deptId}" />
 			</th:block>
           </div>
         </div>

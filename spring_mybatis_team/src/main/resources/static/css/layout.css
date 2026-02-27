@@ -42,6 +42,9 @@ header .user_info {
 
 header .user_info a {
 	text-decoration: none;
+}
+header .user_info a:first-of-type {
+	text-decoration: none;
 	padding: 0 5px;
 	color: #12526d;
 	background-color: #f0f7fa;
