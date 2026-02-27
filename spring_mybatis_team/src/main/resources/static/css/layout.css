@@ -42,6 +42,17 @@ header .user_info {
 
 header .user_info a {
 	text-decoration: none;
+	padding: 0 5px;
+	color: #12526d;
+	background-color: #f0f7fa;
+	border: 1px solid #d1e3ed;
+	border-radius: 5px;
+	transition: all 0.3s ease;
+}
+header .user_info a:hover {
+	background-color: #12526d;
+	color: #edf2f7;
+	border-color: #12526d;
 }
 
 /* ---- サイドバー ---- */
@@ -91,5 +102,9 @@ footer {
 	text-align: center;
 	font-size: 8pt;
 	line-height: 30px;
+	
+	bottom: 0;
+	width: 100%;
+	position: fixed;
 }
 

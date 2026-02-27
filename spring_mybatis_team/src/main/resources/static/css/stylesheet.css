@@ -130,7 +130,7 @@ div.login_input {
 	height: 35px;
 	text-align: left;
 }
- 
+
 
 /* ---- 処理完了メッセージの出力箇所 ---- */
 div.message {
@@ -150,7 +150,8 @@ input[type=submit] {
 }
 
 input[type=submit]:hover{
-	background-color: #0074D9;
-	color: #EDF2F7;
+	background-color: #12526d;
+	color: #ffffff;
+	box-shadow: 0 4px 12px rgba(18, 82, 109, 0.2);
 }
 
